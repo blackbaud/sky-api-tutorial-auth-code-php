@@ -10,7 +10,6 @@ $tokenController = new TokenController();
 $sessionController = new SessionController();
 $authController = new AuthController();
 
-$method = $_SERVER['REQUEST_METHOD'];
 $request = $_GET['request'];
 
 if(isset($request)){
