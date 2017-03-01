@@ -14,7 +14,7 @@ Feel free to leave feedback by filing an [issue](https://github.com/blackbaud/sk
 
 A local running Apache server to run and host the project.  For this example we recommend you install and run the project using [MAMP](https://www.mamp.info/en/).
 
-To run this application in your environment, follow the instructions found wihtin our  [Auth Code Flow Tutorial](https://apidocs.sky.blackbaud.com/docs/code/auth-code-flow/) within our documentation. 
+To run this application in your environment, follow the [Auth Code Flow Tutorial](https://apidocs.sky.blackbaud.com/docs/code/auth-code-flow/) instructions within our documentation. 
 
 > PHP sample coming soon.   Follow the instructions for obtaining the necessary keys from the other code samples.
 
