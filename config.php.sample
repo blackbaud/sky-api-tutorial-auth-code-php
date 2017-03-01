@@ -1,0 +1,8 @@
+<?php
+
+define('BASEPATH', __DIR__);
+define('AuthClientId', '');
+define('AuthClientSecret', '');
+define('AuthRedirectUri', 'http://localhost:8888/token');
+define('AuthSubscriptionKey', '');
+define('BBOAuthBaseURI', 'https://oauth2.sky.blackbaud.com');
