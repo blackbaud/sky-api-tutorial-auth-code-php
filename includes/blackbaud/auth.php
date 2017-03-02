@@ -3,7 +3,7 @@ namespace blackbaud;
 
 class Auth {
   public static function redirect() {
-    $auth_uri = Auth::getAuthorizationUri();
+    $auth_uri = self::getAuthorizationUri();
     header("Location: $auth_uri", true, 301);
     exit();
   }
