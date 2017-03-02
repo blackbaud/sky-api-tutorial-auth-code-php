@@ -29,6 +29,6 @@ class Session {
   }
 
   public static function logout() {
-    $_SESSION = array();
+    unset($_SESSION[self::$tokenName]);
   }
 }
