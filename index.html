@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>@ViewData["Title"]</title>
+  <title>Auth Code Flow Tutorial - PHP</title>
+  <link rel="shortcut icon"  href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <style>
     [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -30,7 +31,7 @@
         = This section is hidden if the session has NOT been authenticated.
       -->
       <div ng-if="!isAuthenticated">
-        <a href="/auth/login" class="btn btn-primary">Log in</a>
+        <a href="/auth/login.php" class="btn btn-primary">Log in</a>
       </div>
 
 
@@ -102,41 +103,37 @@
   -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
   <script>
-      (function (angular) {
-          'use strict';
+  (function (angular) {
+    'use strict';
 
-          angular.module('AuthCodeFlowTutorial', [])
-              .controller('ConstituentCtrl', function ($scope, $http) {
+    angular.module('AuthCodeFlowTutorial', [])
+      .controller('ConstituentCtrl', ($http, $scope, $window) => {
 
-                  // Check user access token.
-                  $http.get('/auth/authenticated').then(function (res) {
-                      $scope.isAuthenticated = res.data.authenticated;
-                      if ($scope.isAuthenticated === false) {
-                          $scope.isReady = true;
-                          return;
-                      }
+        // Check user access token.
+        $http.get('/auth/authenticated.php').then(res => {
+          $scope.isAuthenticated = res.data.authenticated;
+          if ($scope.isAuthenticated === false) {
+            $scope.isReady = true;
+            return;
+          }
 
-                      // Access token is valid. Fetch constituent record.
-                      $http.get('/api/constituents/280').then(function (res) {
-                          $scope.constituent = res.data.constituent;
-                          $scope.isReady = true;
-                      });
-                  });
+          // Access token is valid. Fetch constituent record.
+          $http.get('/api/constituents.php?id=280').then(res => {
+            $scope.constituent = res.data.constituent;
+            $scope.isReady = true;
+          });
+        });
 
-                  $scope.logout = function () {
-                    $http.post('/auth/logout').then(function(res) {
-                      window.location.reload();
-                    })
-                  }
-                  // Manually refresh access token.
-                  $scope.refreshToken = function () {
-                      $http.get('/auth/refresh-token').then(function (res) {
-                          console.log(res);
-                          $scope.tokenResponse = res.data;
-                      });
-                  };
-              });
-      })(window.angular);
+        $scope.logout = () => {
+          $http.post('/auth/logout.php').then(() => $window.location.reload());
+        }
+
+        // Manually refresh access token.
+        $scope.refreshToken = () => {
+          $http.get('/auth/refresh-token.php').then(res => $scope.tokenResponse = res.data);
+        };
+      });
+  })(window.angular);
   </script>
 </body>
 </html>

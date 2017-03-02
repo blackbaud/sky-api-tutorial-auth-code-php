@@ -1,6 +1,0 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule auth/(.*)$ api/auth-api.php?request=$1 [QSA,NC,L]
-RewriteRule token(.*)$ api/token-api.php?routeParam=$1 [QSA,NC,L]
-RewriteRule api/(.*)/(.*)$ api/constitutent-api.php?path=$1&id=$2 [QSA,NC,L]
