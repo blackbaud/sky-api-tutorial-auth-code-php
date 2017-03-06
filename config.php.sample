@@ -3,7 +3,7 @@ namespace blackbaud;
 
 define('AUTH_CLIENT_ID',        '');
 define('AUTH_CLIENT_SECRET',    '');
-define('AUTH_REDIRECT_URI',     'http://localhost:8888/auth/callback');
+define('AUTH_REDIRECT_URI',     'http://localhost:5000/auth/callback');
 define('AUTH_SUBSCRIPTION_KEY', '');
 define('AUTH_BASE_URI',         'https://oauth2.sky.blackbaud.com/');
 define('SKY_API_BASE_URI',      'https://api.sky.blackbaud.com/');
