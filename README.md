@@ -1,4 +1,4 @@
-# sky-api-tutorial-auth-code-php
+# PHP Authorization Code Flow - SKY API
 
 Blackbaud SKY API Authorization Code Flow demo application.
 
@@ -27,7 +27,7 @@ To run this application in your environment, follow the [Auth Code Flow Tutorial
     5. MAMP `Start Servers`.
     6. Open your browser to `http://localhost:8888`.
 
-## Making PATCH requests
+## Making PATCH requests in AngularJS
 
 First, construct the request data object.
 
