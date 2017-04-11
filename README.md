@@ -27,5 +27,27 @@ To run this application in your environment, follow the [Auth Code Flow Tutorial
     5. MAMP `Start Servers`.
     6. Open your browser to `http://localhost:8888`.
 
+## Making PATCH requests
 
+First, construct the request data object.
 
+```
+let patchData = {
+  constituent_id: 280,
+  first: 'Robert'
+};
+```
+
+Then, pass the request into the request's `data` property as a JSON string.
+```
+$http({
+  method: 'patch',
+  url: '/api/constituents.php',
+  data: `data=${JSON.stringify(patchData)}`,
+  headers : {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
+}).then(res => {
+  console.log(res.data.status); // success
+});
+```
