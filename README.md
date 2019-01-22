@@ -6,9 +6,9 @@ This code sample is a very basic example of how to interact with the Blackbaud O
 
 ## About
 
-The Blackbaud SKY API currently supports the [Authorization Code Flow](https://apidocs.sky.blackbaud.com/docs/authorization/), which requires a back-end server component to securely store the client secret.  For this code sample, we've implemented the server component using PHP.
+The Blackbaud SKY API currently supports the [Authorization Code Flow](https://developer.blackbaud.com/skyapi/docs/authorization), which requires a back-end server component to securely store the client secret.  For this code sample, we've implemented the server component using PHP.
 
-We've stripped down the user interface to highlight the Authorization Code Flow.  Our [Barkbaud code samples](https://apidocs.sky.blackbaud.com/docs/code/) provide a rich user interface using [SKY UX](http://skyux.developer.blackbaud.com/).
+We've stripped down the user interface to highlight the Authorization Code Flow.  Our [Barkbaud code samples](https://developer.blackbaud.com/skyapi/docs/code) provide a rich user interface using [SKY UX](http://developer.blackbaud.com/skyux).
 
 Feel free to leave feedback by filing an [issue](https://github.com/blackbaud/sky-api-auth-tutorial/issues).
 
@@ -16,7 +16,7 @@ Feel free to leave feedback by filing an [issue](https://github.com/blackbaud/sk
 
 A local running Apache server to run and host the project.  For this example we recommend you install and run the project using [MAMP](https://www.mamp.info/en/).
 
-To run this application in your environment, follow the [Auth Code Flow Tutorial](https://apidocs.sky.blackbaud.com/docs/code/auth-code-flow/) instructions within our documentation. 
+To run this application in your environment, follow the [Auth Code Flow Tutorial](https://developer.blackbaud.com/skyapi/docs/code/auth-flows/auth-code-flow) instructions within our documentation. 
 
 > PHP sample coming soon.   Follow the instructions for obtaining the necessary keys from the other code samples.
 
