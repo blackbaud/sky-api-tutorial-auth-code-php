@@ -83,12 +83,17 @@
           </table>
         </div>
         <p>
-          <button ng-click="logout()" class="btn btn-primary">Log out</button>
+          <button ng-click="logout()" class="btn btn-link">Log out</button>
           <button ng-click="refreshToken()" class="btn btn-primary">Refresh Access Token</button>
+          <button ng-click="session()" class="btn btn-defult">Session Token Info</button>
         </p>
         <div ng-if="tokenResponse">
           <h4>Token Response:</h4>
           <pre ng-bind="tokenResponse | json"></pre>
+        </div>
+        <div ng-if="sessionResponse">
+          <h4>Session Response:</h4>
+          <pre ng-bind="sessionResponse | json"></pre>
         </div>
       </div>
     </div>
@@ -131,6 +136,11 @@
         // Manually refresh access token.
         $scope.refreshToken = () => {
           $http.get('/auth/refresh-token.php').then(res => $scope.tokenResponse = res.data);
+        };
+
+        // Show the session data
+        $scope.session = () => {
+          $http.get('/auth/session-token.php').then(res => $scope.sessionResponse = res.data);
         };
       });
   })(window.angular);

@@ -1,0 +1,23 @@
+{    
+    "configurations": [
+    {
+        "name": "Blackbaud PHP OAuth Example Web Server",
+        "type": "php",
+        "request": "launch",
+        "runtimeArgs": [
+            "-dxdebug.mode=debug",
+            "-dxdebug.start_with_request=yes",
+            "-S",
+            "localhost:8888"
+        ],
+        "program": "",
+        "cwd": "${workspaceRoot}",
+        "port": 9003,
+        "serverReadyAction": {
+            "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
+            "uriFormat": "http://localhost:%s",
+            "action": "openExternally"
+        }
+    }
+    ]
+}
