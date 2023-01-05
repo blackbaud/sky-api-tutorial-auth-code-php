@@ -13,6 +13,7 @@ class Session {
   public static function getToken() {
     return $_SESSION[self::$tokenName];
   }
+  
   public static function setStateVerifier($state = '', $verifier = '') {
     $_SESSION[$state] = $verifier;
   }
