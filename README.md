@@ -18,7 +18,9 @@ A local running Apache server to run and host the project.  For this example we 
 
 To run this application in your environment, follow the [Auth Code Flow Tutorial](https://developer.blackbaud.com/skyapi/docs/code/auth-flows/auth-code-flow) instructions within our documentation. 
 
-> PHP sample coming soon.   Follow the instructions for obtaining the necessary keys from the other code samples.
+Note: At a minimum, set the application's [Scopes](https://developer.blackbaud.com/skyapi/docs/applications/scopes) to `Limited data access` with the `Raiser's Edge NXT - Read` scope.
+
+> You will need to use PHP 7+.   Follow the instructions for obtaining the necessary keys from the other code samples.
 
 ## Getting Started
 

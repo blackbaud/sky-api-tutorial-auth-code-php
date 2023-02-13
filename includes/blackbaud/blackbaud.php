@@ -9,3 +9,4 @@ require_once join(DIRECTORY_SEPARATOR, array($_SERVER['DOCUMENT_ROOT'], 'config.
 require_once join(DIRECTORY_SEPARATOR, array('api', 'constituents.php'));
 require_once 'auth.php';
 require_once 'http.php';
+require_once 'pkce.php';
