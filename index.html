@@ -85,7 +85,8 @@
         <p>
           <button ng-click="logout()" class="btn btn-link">Log out</button>
           <button ng-click="refreshToken()" class="btn btn-primary">Refresh Access Token</button>
-          <button ng-click="session()" class="btn btn-defult">Session Token Info</button>
+          <button ng-click="session()" class="btn btn-default">Session Token Info</button>
+          <button ng-click="loadData()" class="btn btn-default">Refresh</button>
         </p>
         <div ng-if="tokenResponse">
           <h4>Token Response:</h4>
@@ -123,11 +124,25 @@
           }
 
           // Access token is valid. Fetch constituent record.
+          $scope.loadData();
+        });
+
+        $scope.loadData = () => {
+          $scope.constituent = undefined;
+
           $http.get('/api/constituents.php?id=280').then(res => {
             $scope.constituent = res.data.constituent;
             $scope.isReady = true;
+          }).catch(err => {
+            console.log(err);
+
+            if (err.status === 401) {
+              $scope.isAuthenticated = false;
+            }
+
+            $scope.isReady = true;
           });
-        });
+        }
 
         $scope.logout = () => {
           $http.post('/auth/logout.php').then(() => $window.location.reload());
