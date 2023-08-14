@@ -35,7 +35,11 @@ class Session {
       Auth::refreshAccessToken();
     } else {
       // log the user out since the access token and refresh tokens are invalid
-      Auth::logout();
+      self::logout();
+      
+      //return a 401 response
+      http_response_code(401);
+      exit();
     }
 
     // return the access token if it is valid
