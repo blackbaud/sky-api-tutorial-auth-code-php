@@ -1,164 +1,180 @@
 <!DOCTYPE html>
-<html lan="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Auth Code Flow Tutorial - PHP</title>
-  <link rel="shortcut icon"  href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <style>
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-      display: none !important;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auth Code Flow Tutorial - PHP</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
-
-
-<!--
-  INITIALIZE THE APP
-  = [ng-app] The name of the AngularJS application to use.
-  = [ng-controller] The name of the AngularJS controller function, which handles the model data.
--->
-<body ng-app="AuthCodeFlowTutorial">
-  <div class="container" ng-controller="ConstituentCtrl" ng-cloak>
-    <h1>PHP Authorization Code Flow Tutorial - SKY API</h1>
-    <p class="lead">The following is a demonstration of the authorization code flow within SKY API, implemented using <a href="https://secure.php.net/" target="_blank">PHP</a>.</p>
-    <div class="content" ng-show="isReady">
-
-      <!--
-        LOGIN
-        = This section is hidden if the session has NOT been authenticated.
-      -->
-      <div ng-if="!isAuthenticated">
-        <a href="/auth/login.php" class="btn btn-primary">Log in</a>
-      </div>
-
-
-      <!--
-        CONSTITUENT DATA
-        = This section is only visible when the session has been authenticated and
-        = appropriate constituent data has been returned.
-        = AngularJS uses a templating engine similar to HandlebarsJS to output model data.
-      -->
-      <div ng-if="isAuthenticated">
-        <div class="well">
-          <h3>Constituent: {{ constituent.name }}</h3>
-          <p>
-            See <a href="https://developer.blackbaud.com/skyapi/apis/constituent/entities#Constituent" target="_blank">Constituent</a>
-            within the Blackbaud SKY API contact reference for a full listing of properties.
-          </p>
+<body>
+    <div class="container">
+        <h1>PHP Authorization Code Flow Tutorial - SKY API</h1>
+        <p class="lead">The following is a demonstration of the authorization code flow within SKY API, implemented using <a href="https://secure.php.net/" target="_blank">PHP</a>.</p>
+        <div class="content">
+            <a href="/auth/login.php" class="btn btn-primary" id="login-button">Log in</a>
+            <div id="constituent-data-section" class="hidden">
+                <div class="well">
+                    <h3 id="constituent-name"></h3>
+                    <p>
+                        See <a href="https://developer.blackbaud.com/skyapi/apis/constituent/entities#Constituent" target="_blank">Constituent</a>
+                        within the Blackbaud SKY API contact reference for a full listing of properties.
+                    </p>
+                </div>
+                <div id="constituent-data"></div>
+                <button id="logout-button" class="btn btn-link">Log out</button>
+                <button id="refresh-token-button" class="btn btn-primary">Refresh Access Token</button>
+                <button id="session-button" class="btn btn-default">Session Token Info</button>
+                <button id="refresh-button" class="btn btn-default">Refresh</button>
+                <div id="token-response"></div>
+                <div id="session-response"></div>
+            </div>
         </div>
-        <p ng-if="::constituent.error" ng-bind="::constituent.error" class="alert alert-danger"></p>
-        <div ng-if="::constituent.id" class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Key</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>id</td>
-                <td>{{ constituent.id }}</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>{{ constituent.type }}</td>
-              </tr>
-              <tr>
-                <td>lookup_id</td>
-                <td>{{ constituent.lookup_id }}</td>
-              </tr>
-              <tr>
-                <td>first</td>
-                <td>{{ constituent.first }}</td>
-              </tr>
-              <tr>
-                <td>last</td>
-                <td>{{ constituent.last }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          <button ng-click="logout()" class="btn btn-link">Log out</button>
-          <button ng-click="refreshToken()" class="btn btn-primary">Refresh Access Token</button>
-          <button ng-click="session()" class="btn btn-default">Session Token Info</button>
-          <button ng-click="loadData()" class="btn btn-default">Refresh</button>
-        </p>
-        <div ng-if="tokenResponse">
-          <h4>Token Response:</h4>
-          <pre ng-bind="tokenResponse | json"></pre>
-        </div>
-        <div ng-if="sessionResponse">
-          <h4>Session Response:</h4>
-          <pre ng-bind="sessionResponse | json"></pre>
-        </div>
-      </div>
     </div>
-
-
-    <div class="lead" ng-hide="isReady">Loading...</div>
-  </div>
-
-  <!--
-    SCRIPTS
-    = Data is retrieved from Sky API via an AngularJS application.
-  -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-  <script>
-  (function (angular) {
-    'use strict';
-
-    angular.module('AuthCodeFlowTutorial', [])
-      .controller('ConstituentCtrl', ($http, $scope, $window) => {
-
-        // Check user access token.
-        $http.get('/auth/authenticated.php').then(res => {
-          $scope.isAuthenticated = res.data.authenticated;
-          if ($scope.isAuthenticated === false) {
-            $scope.isReady = true;
-            return;
-          }
-
-          // Access token is valid. Fetch constituent record.
-          $scope.loadData();
-        });
-
-        $scope.loadData = () => {
-          $scope.constituent = undefined;
-
-          $http.get('/api/constituents.php?id=280').then(res => {
-            $scope.constituent = res.data.constituent;
-            $scope.isReady = true;
-          }).catch(err => {
-            console.log(err);
-
-            if (err.status === 401) {
-              $scope.isAuthenticated = false;
-            }
-
-            $scope.isReady = true;
-          });
-        }
-
-        $scope.logout = () => {
-          $http.post('/auth/logout.php').then(() => $window.location.reload());
-        }
-
-        // Manually refresh access token.
-        $scope.refreshToken = () => {
-          $http.get('/auth/refresh-token.php').then(res => $scope.tokenResponse = res.data);
-        };
-
-        // Show the session data
-        $scope.session = () => {
-          $http.get('/auth/session-token.php').then(res => $scope.sessionResponse = res.data);
-        };
-      });
-  })(window.angular);
-  </script>
 </body>
 </html>
+
+<script>
+    (function () {
+        'use strict';
+
+        const loginButton = document.getElementById('login-button');
+        const constituentDataSection = document.getElementById('constituent-data-section');
+        const constituentName = document.getElementById('constituent-name');
+        const constituentData = document.getElementById('constituent-data');
+        const logoutButton = document.getElementById('logout-button');
+        const refreshTokenButton = document.getElementById('refresh-token-button');
+        const sessionButton = document.getElementById('session-button');
+        const tokenResponse = document.getElementById('token-response');
+        const sessionResponse = document.getElementById('session-response');
+        const refreshButton = document.getElementById('refresh-button');
+
+        // Check user access token.
+        fetch('/auth/authenticated.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.authenticated === true) {
+                    // Access token is valid. Fetch constituent record.
+                    fetch('/api/constituents.php?id=280')
+                        .then(response => response.json())
+                        .then(data => {
+                            constituentName.innerHTML = `Constituent: ${data.constituent.name}`;
+                            constituentData.innerHTML = `
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>id</td>
+                      <td>${data.constituent.id}</td>
+                    </tr>
+                    <tr>
+                      <td>type</td>
+                      <td>${data.constituent.type}</td>
+                    </tr>
+                    <tr>
+                      <td>lookup_id</td>
+                      <td>${data.constituent.lookup_id}</td>
+                    </tr>
+                    <tr>
+                      <td>first</td>
+                      <td>${data.constituent.first}</td>
+                    </tr>
+                    <tr>
+                      <td>last</td>
+                      <td>${data.constituent.last}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              `;
+                            loginButton.classList.add('hidden');
+                            constituentDataSection.classList.remove('hidden');
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            loginButton.classList.remove('hidden');
+                            constituentDataSection.classList.add('hidden');
+                        });
+                }
+            });
+
+        logoutButton.addEventListener('click', () => {
+            fetch('/auth/logout.php', { method: 'POST' })
+                .then(() => window.location.reload());
+        });
+
+        refreshTokenButton.addEventListener('click', () => {
+            fetch('/auth/refresh-token.php')
+                .then(response => response.json())
+                .then(data => {
+                    tokenResponse.innerHTML = `
+            <h4>Token Response:</h4>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          `;
+                });
+        });
+
+        sessionButton.addEventListener('click', () => {
+            fetch('/auth/session-token.php')
+                .then(response => response.json())
+                .then(data => {
+                    sessionResponse.innerHTML = `
+            <h4>Session Response:</h4>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          `;
+                });
+        });
+
+        refreshButton.addEventListener('click', () => {
+            fetch('/api/constituents.php?id=280')
+                .then(response => response.json())
+                .then(data => {
+                    constituentName.innerHTML = `Constituent: ${data.constituent.name}`;
+                    constituentData.innerHTML = `
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>id</td>
+                      <td>${data.constituent.id}</td>
+                    </tr>
+                    <tr>
+                      <td>type</td>
+                      <td>${data.constituent.type}</td>
+                    </tr>
+                    <tr>
+                      <td>lookup_id</td>
+                      <td>${data.constituent.lookup_id}</td>
+                    </tr>
+                    <tr>
+                      <td>first</td>
+                      <td>${data.constituent.first}</td>
+                    </tr>
+                    <tr>
+                      <td>last</td>
+                      <td>${data.constituent.last}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              `;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    })();
+</script>
